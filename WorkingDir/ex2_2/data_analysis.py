@@ -1,7 +1,7 @@
 # data_analysis.py
 
 import sys
-sys.path.append('c:\\Users\\agost\\git_projects\\python-mastery\\WorkingDir\\ex2_1')
+sys.path.append('c:\\Users\\agost\\git_projects\\python-mastery\\WorkingDir\\ex2_5')
 
 from readrides import read_rides
 
@@ -53,7 +53,7 @@ def top_five_routes(records):
 
 
 def main():
-    rows = read_rides('././Data/ctabus.csv',2)
+    rows = read_rides('././Data/ctabus.csv')
 
     #print('Number of ruotes in Chicago:', counter_ruotes(rows))
 

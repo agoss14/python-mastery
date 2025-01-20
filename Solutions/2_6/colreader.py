@@ -1,9 +1,10 @@
 # colreader.py
 
-import collections
 import csv
+from collections.abc import Sequence
+from collections import defaultdict
 
-class DataCollection(collections.abc.Sequence):
+class DataCollection(Sequence):
     def __init__(self, columns):
         self.column_names = list(columns)
         self.column_data = list(columns.values())
@@ -17,7 +18,7 @@ class DataCollection(collections.abc.Sequence):
 
 
 def read_csv_as_columns(filename, types):
-    columns = collections.defaultdict(list)
+    columns = defaultdict(list)
     with open(filename) as f:
         rows = csv.reader(f)
         headers = next(rows)
@@ -32,5 +33,5 @@ if __name__ == '__main__':
     from sys import intern
 
     tracemalloc.start()
-    data = read_csv_as_columns('../../Data/ctabus.csv', [intern, intern, intern, int])
+    data = read_csv_as_columns('././Data/ctabus.csv', [intern, intern, intern, int])
     print(tracemalloc.get_traced_memory())
