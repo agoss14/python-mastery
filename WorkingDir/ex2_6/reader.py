@@ -98,6 +98,30 @@ def read_csv_as_dicts(filename, list_of_types):
     return records
 
 
+# Utility function that read a csv file and foreach each record create an instance of a class
+
+def read_csv_as_instances(filename, cls):
+
+    """
+    filename = name of the source file
+    cls = a class for the instances, one foreach record
+    """
+
+    records = []
+
+    with open(filename) as f:
+
+        file_csv = csv.reader(f)
+        headers = next(file_csv)
+
+        print(f'Headers: {headers}')
+
+        records = [cls.from_row(row) for row in file_csv]
+
+    return records
+
+
+
 def main():
 
     print('Welcome to the reader tool!')
