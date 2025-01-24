@@ -10,6 +10,8 @@ import tracemalloc
 
 from sys import intern
 
+from abc import ABC, abstractmethod
+
 
 # Define a utility function read_csv_as_columns() that reads a file of CSV data into lists
 # of values, where each list represents a column of the CSV
@@ -71,56 +73,53 @@ def read_csv_as_columns(filename, types):
 
     return records
 
+# Example of Template design pattern using an abstract class
+class CSVParser(ABC):
 
+    def parse(self, filename):
+        records = []
+        with open(filename) as f:
+            rows = csv.reader(f)
+            headers = next(rows)
+            for row in rows:
+                record = self.make_record(headers, row)
+                records.append(record)
+        return records
+
+    @abstractmethod
+    def make_record(self, headers, row):
+        pass
+
+class DictCSVParser(CSVParser):
+    def __init__(self, types):
+        self.types = types
+
+    def make_record(self, headers, row):
+        return { name: func(val) for name, func, val in zip(headers, self.types, row) }
+
+class InstanceCSVParser(CSVParser):
+    def __init__(self, cls):
+        self.cls = cls
+
+    def make_record(self, headers, row):
+        return self.cls.from_row(row)
+    
 # Define a utility function read_csv_as_dicts() that reads a file of CSV data into a list
 # of dictionaries where the user specifies the type conversions for each column.
-
 def read_csv_as_dicts(filename, list_of_types):
 
     """
     filename = name of the source file
     list_of_types = a list of types of columns, where the order matters
     """
-
-    records = []
-
-    with open(filename) as f:
-
-        file_csv = csv.reader(f)
-        headers = next(file_csv)
-
-        print(f'Headers: {headers}')
-        print(f'List of column types: {list_of_types}')
-
-        for row in file_csv:
-            records.append({header:func(value) for header, func, value in zip(headers,list_of_types,row)})
-
-    return records
-
+    parser = DictCSVParser(list_of_types)
+    return parser.parse(filename)
 
 # Utility function that read a csv file and foreach each record create an instance of a class
-
 def read_csv_as_instances(filename, cls):
 
-    """
-    filename = name of the source file
-    cls = a class for the instances, one foreach record
-    """
-
-    records = []
-
-    with open(filename) as f:
-
-        file_csv = csv.reader(f)
-        headers = next(file_csv)
-
-        print(f'Headers: {headers}')
-
-        records = [cls.from_row(row) for row in file_csv]
-
-    return records
-
-
+    parser = InstanceCSVParser(cls)
+    return parser.parse(filename)
 
 def main():
 
