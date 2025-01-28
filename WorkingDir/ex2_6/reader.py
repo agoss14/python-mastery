@@ -73,6 +73,8 @@ def read_csv_as_columns(filename, types):
 
     return records
 
+#############################################################################
+
 # Example of Template design pattern using an abstract class
 class CSVParser(ABC):
 
@@ -120,6 +122,8 @@ def read_csv_as_instances(filename, cls):
 
     parser = InstanceCSVParser(cls)
     return parser.parse(filename)
+
+#############################################################################
 
 def main():
 
