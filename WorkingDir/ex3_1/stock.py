@@ -16,7 +16,7 @@ class Stock:
         self.price = price
 
     # Getter and setter for validation rules without change the way you use the class instances
-    @property
+    @property #modify the behaviour of self.shares
     def shares(self):
         return self._shares
     
@@ -24,7 +24,7 @@ class Stock:
     def price(self):
         return self._price
     
-    @shares.setter
+    @shares.setter #modify the behaviour of self.shares = something
     def shares(self,value):
         if isinstance(value, self._types[1]):
             if value >= 0:
@@ -67,6 +67,7 @@ class Stock:
             return True
         return False
         
+######################################################################
 
 class DStock(Stock):
     _types = (str, int, Decimal)
@@ -90,6 +91,7 @@ def print_portfolio(headers, portfolio):
     for s in portfolio:
         print('%10s %10d %10.2f' % (s.name, s.shares, s.price))
         
+######################################################################
 
 def main():
 

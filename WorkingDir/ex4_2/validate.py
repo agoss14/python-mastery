@@ -4,13 +4,14 @@
 
 # VALIDATE CLASSES AND METHODS
 
-# Implemented as Descriptor
+# Implemented as CUSTOM DESCRIPTOR
 class Validator:
 
     def __init__(self, name=None):
         self.name = name
 
-    # useful method for inizializing a Validator object (ex: String), without specifing two times the name
+    # Called when the descriptor is placed in a class definition
+    # useful method for inizializing a Validator object (example: String), without specifing two times the name
     # Without __set_name__ method: name = String('name')
     # With    __set_name__ method: name = String() --> the name of the descriptor is setted with the name of the object
     # cls is not used but it's important for the order of the parameters automatically provided to function
