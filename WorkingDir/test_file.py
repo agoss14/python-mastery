@@ -1,5 +1,8 @@
 # test_file.py
 
-with open('Data/portfolio.csv') as lines:
+def some_func(x,y,*args,**kwargs):
+    print(sum(args))
+    #print(x + y + z)
 
-    print(type(lines))
+
+some_func(1,2,3,z=4)

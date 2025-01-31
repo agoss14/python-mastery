@@ -30,7 +30,9 @@ class Stock:
             if value >= 0:
                 self._shares = value
                 return
-        raise TypeError(f'Expected a positive {self._types[1]}!')
+            else:
+                raise ValueError(f'Expected a positive {self._types[1]}!')
+        raise TypeError(f'Expected a {self._types[1]}!')
     
     @price.setter
     def price(self,value):
@@ -38,7 +40,9 @@ class Stock:
             if value >= 0:
                 self._price = value
                 return
-        raise TypeError(f'Expected a positive {self._types[2]}!')
+            else:
+                raise ValueError(f'Expected a positive {self._types[2]}!')
+        raise TypeError(f'Expected a {self._types[1]}!')
 
 
     @classmethod # class method: useful for defining an alternative inizializer
@@ -57,7 +61,7 @@ class Stock:
         return 'Stock: name=' + str(self.name) + ' shares=' + str(self.shares) + ' price=' + str(self.price)
     
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.name},{self.shares},{self.price})'
+        return f'{self.__class__.__name__}(\'{self.name}\', {self.shares}, {self.price})'
     
     def __eq__(self, other_stock):
         if type(other_stock) == type(self) and \
@@ -69,6 +73,7 @@ class Stock:
         
 ######################################################################
 
+# Stock class with decimals
 class DStock(Stock):
     _types = (str, int, Decimal)
 
