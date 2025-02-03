@@ -72,26 +72,60 @@ class NonEmptyString(String, NonEmpty):
 
 ###########################################################
 
-# This class acts like a wrapper for functions like add()
-class ValidatedFunction:
-    def __init__(self, func):
-        self.func = func
+# validate() is a wrapper, that enables the usage of decorator @validate
+def validate(func):
+    """
+    This is a wrapper usable as decorator in order to add validation functionalities to functions
+    """
 
-    def __call__(self, *args, **kwargs):
-        print('Calling', self.func)
+    # Annotations of the function (dict() for making a copy)
+    annotations = dict(func.__annotations__)
+    print(annotations)
 
-        # Validating input with bind
-        bind_args = inspect.signature(self.func).bind(*args, **kwargs) # arguments provided by the caller 
-        annotations = self.func.__annotations__ # annotations of the function
+    # Get the return annotation (if any)
+    retcheck = annotations.pop('return', None)
+
+    # Get the signature of the func
+    bind_signature = inspect.signature(func)
+
+    def wrapper(*args, **kwargs):
+
+        errors = []
+
+        print('Calling', func)
+
+        # Get arguments provided to func by its caller (no need to create a copy of the dict)
+        bind_dict = bind_signature.bind(*args, **kwargs).arguments
+
         #foreach argument, check if it is of the annotated type (function typehints)
-        for name, value in bind_args.arguments.items():
-            type_hint = annotations[name]
-            type_hint.check(value) #if not valid, check raises an Exception
+        for argument, validator in annotations.items():
+            try:
+                #try the validation method 'validator' (ex: String.check(value)) on the value provided by the Caller
+                validator.check(bind_dict[argument])
+            except Exception as e: 
+                #catch the exception raised from check()
+                errors.append(f'    {argument}: {e}') #append to the list error
 
-        result = self.func(*args, **kwargs)
+        # If there is almost one error, it raises an Exception
+        if errors:
+            raise TypeError('Bad Arguments\n' + '\n'.join(errors))
+            
+        # Call the func and save result for check the type of the result (if specified)
+        result = func(*args,**kwargs)
+        
+        # Enforce return check (if any)
+        if retcheck:
+            try:
+                retcheck.check(result)
+            except Exception as e:
+                raise TypeError(f'Bad return: {e}') from None
+            
+        # Return the result of the funct
         return result
     
-@ValidatedFunction
+    return wrapper
+
+@validate
 def add(x: Integer, y: Integer):
     return x + y
 
@@ -126,8 +160,8 @@ def main():
     # s = Stock('PIPPO', 12, 45.21)
     # print(s)
 
-    print(add(1,2))
-    print(add('1','2'))
+    print(add(1,3))
+    #print(add('1','2'))
 
 if __name__=='__main__':
     main()

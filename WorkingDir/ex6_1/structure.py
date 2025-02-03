@@ -15,13 +15,33 @@ class Structure(ABC):
     With this abstract class, you can simplify the __init__ function of the classes that inherit from it
     """
 
+    ##################################
+    @classmethod
+    def create_init(cls):
+        """
+        Function that sets the __init__ method using exec() (see stock.py under ex6_4)
+        """
+        argstr = ','.join(cls._fields)
+
+        code = f'def __init__(self, {argstr}):\n'
+
+        for name in cls._fields:
+            code += f'    self.{name} = {name}\n'
+
+        locs = { }
+        exec(code, locs)
+        cls.__init__ = locs['__init__']
+
+    ##################################
+
+
     @classmethod
     def set_fields(cls):
         """
         Function that sets the _fields variable of child classes using the signature of their constructor
         NOTE: cls is the class of the child that inherits from Structure class
         """
-        sig = inspect.signature(cls)
+        sig = inspect.signature(cls) #signature on a class returns parameters of __init__ method
         cls._fields = list(sig.parameters)
         
 

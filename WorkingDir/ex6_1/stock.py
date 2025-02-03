@@ -1,12 +1,14 @@
 # stock.py
 
 """
-Stock class redefined
+Stock class redefined with usage of local spaces and signature of methods (see Structure)
 """
 
 from structure import Structure
 
 class Stock(Structure):
+
+    #_fields is populated dinamycally with Stock.set_fields()
 
     def __init__(self, name, shares, price):
         self._init()
@@ -18,4 +20,4 @@ class Stock(Structure):
     def sell(self, nshares):
         self.shares -= nshares
 
-Stock.set_fields()
+Stock.set_fields() # see Structure father class
