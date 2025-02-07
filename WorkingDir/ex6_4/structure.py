@@ -18,7 +18,7 @@ class Structure(ABC):
     @classmethod
     def create_init(cls):
         """
-        Function that sets the __init__ method using exec()
+        Function that sets the __init__ method using exec() and "cls._fields" class attribute
         """
         argstr = ','.join(cls._fields)
 
