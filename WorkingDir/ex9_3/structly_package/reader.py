@@ -5,7 +5,6 @@ __all__ = [
     'read_csv_as_dicts'   
 ]
 
-
 import csv
 import logging
 
